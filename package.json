@@ -1,0 +1,31 @@
+{
+  "name": "@aviato-media/official-plugins",
+  "private": true,
+  "version": "0.0.0",
+  "license": "MIT",
+  "type": "module",
+  "description": "Official open-source plugins for Aviato.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/aviato-media/official-plugins"
+  },
+  "workspaces": [
+    "plugins/*"
+  ],
+  "scripts": {
+    "build": "bun run scripts/build-plugin.ts",
+    "pack": "bun run scripts/pack-plugin.ts",
+    "release": "bun run scripts/release-plugin.ts",
+    "changed": "bun run scripts/changed-plugins.ts",
+    "typecheck": "bun run --filter='*' typecheck",
+    "test": "bun test",
+    "lint": "eslint 'plugins/*/src/**/*.ts' 'scripts/**/*.ts'"
+  },
+  "packageManager": "bun@1.3.11",
+  "devDependencies": {
+    "@benhutchins/eslint-joy": "1.0.1",
+    "@types/bun": "^1.3.12",
+    "eslint": "^9.39.4",
+    "typescript": "^5.9.3"
+  }
+}

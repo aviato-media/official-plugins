@@ -1,0 +1,25 @@
+{
+  "id": "@aviato-media/fs-local",
+  "name": "Local Filesystem",
+  "version": "0.1.0",
+  "description": "Add local files to your libraries",
+  "author": "Aviato",
+  "license": "MIT",
+  "engine": "bun",
+  "entry": "dist/index.js",
+  "aviato": {
+    "minVersion": "0.1.0"
+  },
+  "configuration": [
+    { "key": "excludePatterns", "label": "Exclude patterns", "description": "Glob patterns to exclude from scanning", "input": "string-list" },
+    { "key": "watchForChanges", "label": "Watch for changes", "description": "Automatically detect new or modified files", "input": "toggle", "default": true }
+  ],
+  "capabilities": ["filesystem"],
+  "capabilityConfig": {
+    "filesystem": {
+      "supportsWatch": true,
+      "supportsLocalFileAccess": true,
+      "supportsWrite": true
+    }
+  }
+}
