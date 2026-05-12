@@ -1,0 +1,6 @@
+# Ensure bun is in PATH
+export PATH="$HOME/.bun/bin:$PATH"
+
+bun run lint
+bun run typecheck
+bun test

@@ -19,13 +19,15 @@
     "changed": "bun run scripts/changed-plugins.ts",
     "typecheck": "bun run --filter='*' typecheck",
     "test": "bun test",
-    "lint": "eslint 'plugins/*/src/**/*.ts' 'scripts/**/*.ts'"
+    "lint": "eslint 'plugins/*/src/**/*.ts' 'scripts/**/*.ts'",
+    "prepare": "husky"
   },
   "packageManager": "bun@1.3.13",
   "devDependencies": {
     "@benhutchins/eslint-joy": "1.0.1",
     "@types/bun": "^1.3.13",
     "eslint": "^10.3.0",
+    "husky": "^9.1.7",
     "typescript": "^6.0.3"
   }
 }
