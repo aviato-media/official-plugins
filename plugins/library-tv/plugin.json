@@ -1,0 +1,62 @@
+{
+  "id": "@aviato-media/library-tv",
+  "name": "TV Shows Library",
+  "version": "1.0.0",
+  "description": "TV show library with series/season/episode browsing, rich metadata display, and filtering",
+  "author": "Aviato",
+  "license": "MIT",
+  "engine": "bun",
+  "entry": "dist/index.js",
+  "aviato": {
+    "minVersion": "0.1.0"
+  },
+  "capabilities": ["library"],
+  "mediaTypes": {
+    "tv": {
+      "episodic": true,
+      "queueStyle": "up-next",
+      "autoplay": true,
+      "queueStrategy": "lazy"
+    }
+  },
+  "capabilityConfig": {
+    "library": {
+      "bundling": {
+        "strategy": "per-file",
+        "identity": {
+          "pattern": "S(?<season>\\d+)E(?<episode>\\d+)",
+          "scope": "directory"
+        }
+      },
+      "paths": [
+        {
+          "extensions": ["system:video"]
+        },
+        {
+          "type": "trailer",
+          "rules": ["*trailer*", "trailers/**/*"],
+          "extensions": ["system:video"]
+        },
+        {
+          "type": "behind-the-scenes",
+          "rules": ["*behind?the?scenes*", "*behindthescenes*", "behind?the?scenes/**/*", "*making?of*", "*makingof*", "*bts*"],
+          "extensions": ["system:video"]
+        },
+        {
+          "type": "deleted-scene",
+          "rules": ["*deleted?scene*", "*deletedscene*", "deleted?scenes/**/*"],
+          "extensions": ["system:video"]
+        },
+        {
+          "type": "extra",
+          "rules": ["extras/**/*", "featurettes/**/*", "other/**/*", "*featurette*", "*bonus*", "*interview*"],
+          "extensions": ["system:video"]
+        },
+        {
+          "type": "companion",
+          "extensions": ["system:text", ".nfo", ".jpg", ".jpeg", ".png", ".webp", ".srt", ".ass", ".ssa", ".vtt", ".sub"]
+        }
+      ]
+    }
+  }
+}
