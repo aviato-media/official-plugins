@@ -1,0 +1,19 @@
+{
+  "id": "@aviato-media/tmdb",
+  "name": "TMDb Indexer",
+  "version": "1.0.0",
+  "description": "Indexes movie and TV show files by resolving metadata from The Movie Database (TMDb)",
+  "author": "Aviato",
+  "license": "MIT",
+  "engine": "bun",
+  "entry": "dist/index.js",
+  "aviato": {
+    "minVersion": "0.1.0"
+  },
+  "configuration": [
+    { "key": "tmdbApiKey", "label": "TMDb API Key", "description": "Personal API key for The Movie Database, will use Aviato's API key when left blank", "input": "text", "required": false},
+    { "key": "language", "label": "Metadata language", "description": "Language for fetched metadata", "input": "text", "default": "en-US" }
+  ],
+  "capabilities": ["indexer", "artwork-search"],
+  "mediaTypes": ["movies", "tv"]
+}
