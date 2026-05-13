@@ -1,0 +1,38 @@
+{
+  "id": "@aviato-media/library-audiobooks",
+  "name": "Audiobooks Library",
+  "version": "1.0.0",
+  "description": "Audiobook library with author/narrator/series browsing and chapter display",
+  "author": "Aviato",
+  "license": "MIT",
+  "engine": "bun",
+  "entry": "dist/index.js",
+  "aviato": {
+    "minVersion": "0.1.0"
+  },
+  "capabilities": ["library"],
+  "mediaTypes": {
+    "audiobooks": {
+      "queueStyle": "panel",
+      "autoplay": true,
+      "queueStrategy": "eager"
+    }
+  },
+  "capabilityConfig": {
+    "library": {
+      "bundling": {
+        "strategy": "per-folder",
+        "perFileExtensions": [".m4b"]
+      },
+      "paths": [
+        {
+          "extensions": [".m4b", ".mp3"]
+        },
+        {
+          "type": "companion",
+          "extensions": [".pdf", ".opf", ".jpg", ".jpeg", ".png", ".webp"]
+        }
+      ]
+    }
+  }
+}
