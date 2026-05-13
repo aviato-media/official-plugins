@@ -6,6 +6,7 @@ These [Aviato](https://avi.ato.software/) plugins maintained by the [Ato](https:
 
 | Plugin | Description |
 | ------ | ----------- |
+| [audible](./plugins/audible/) | Indexes audiobook files via Audible (audnex.us). |
 | [fs-local](./plugins/fs-local/) | Adds local filesystem sources to your Aviato libraries. |
 
 These plugins are open-sourced (see [LICENSE](./LICENSE)) and double as reference implementations for the Aviato plugin system. Contributions are welcome — see [CONTRIBUTING.md](./CONTRIBUTING.md).

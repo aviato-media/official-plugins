@@ -1,0 +1,28 @@
+{
+  "id": "@aviato-media/audible",
+  "name": "Audible Indexer",
+  "version": "1.0.0",
+  "description": "Indexes audiobook files by resolving metadata from Audible (via the audnex.us API)",
+  "author": "Aviato",
+  "license": "MIT",
+  "engine": "bun",
+  "entry": "dist/index.js",
+  "aviato": {
+    "minVersion": "0.1.0"
+  },
+  "configuration": [
+    {
+      "key": "region",
+      "label": "Audible region",
+      "description": "Audible storefront to search. ASIN lookups will use this region as a hint.",
+      "input": "select",
+      "options": ["us", "ca", "uk", "au", "fr", "de", "jp", "it", "in", "es"],
+      "default": "us"
+    }
+  ],
+  "capabilities": ["indexer"],
+  "mediaTypes": ["audiobooks"],
+  "rateLimit": {
+    "maxConcurrency": 1
+  }
+}
