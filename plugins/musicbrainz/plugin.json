@@ -1,0 +1,19 @@
+{
+  "id": "@aviato-media/musicbrainz",
+  "name": "MusicBrainz Indexer",
+  "version": "1.0.0",
+  "description": "Indexes music files by resolving metadata from MusicBrainz and Cover Art Archive",
+  "author": "Aviato",
+  "license": "MIT",
+  "engine": "bun",
+  "entry": "dist/index.js",
+  "aviato": {
+    "minVersion": "0.1.0"
+  },
+  "configuration": [],
+  "capabilities": ["indexer"],
+  "mediaTypes": ["music"],
+  "rateLimit": {
+    "maxConcurrency": 1
+  }
+}

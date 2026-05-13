@@ -12,6 +12,7 @@ These [Aviato](https://avi.ato.software/) plugins maintained by the [Ato](https:
 | [library-books](./plugins/library-books/) | Ebook library with author, series, and publisher browsing. |
 | [library-movies](./plugins/library-movies/) | Movie library with rich metadata, trailers, and extras classification. |
 | [library-tv](./plugins/library-tv/) | TV show library with series/season/episode browsing. |
+| [musicbrainz](./plugins/musicbrainz/) | Indexes music files via MusicBrainz and Cover Art Archive. |
 
 These plugins are open-sourced (see [LICENSE](./LICENSE)) and double as reference implementations for the Aviato plugin system. Contributions are welcome — see [CONTRIBUTING.md](./CONTRIBUTING.md).
 

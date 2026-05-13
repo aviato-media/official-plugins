@@ -115,6 +115,9 @@
     "@aviato-media/library-movies": ["@aviato-media/library-movies@workspace:plugins/library-movies"],
 
     "@aviato-media/library-tv": ["@aviato-media/library-tv@workspace:plugins/library-tv"],
+
+    "@aviato-media/musicbrainz": ["@aviato-media/musicbrainz@workspace:plugins/musicbrainz"],
+
     "@aviato-media/plugin-sdk": ["@aviato-media/plugin-sdk@1.0.0", "", { "dependencies": { "picomatch": "^4.0.4", "zod": "^4.3.6" } }, "sha512-sLQpWef9QaFPpNNAsPXB7oeZHVqYMrdO57kJFHI4Eo19paBwNYvTgGXu0EWU3vo/XQ9x8MksRJTACC4EoeJo0g=="],
 
     "@benhutchins/eslint-joy": ["@benhutchins/eslint-joy@1.0.1", "", { "dependencies": { "@stylistic/eslint-plugin": "^5.0.0", "@typescript-eslint/eslint-plugin": "^8.0.0", "@typescript-eslint/parser": "^8.0.0", "eslint-plugin-import-x": "^4.0.0", "eslint-plugin-simple-import-sort": "^13.0.0", "eslint-plugin-unused-imports": "^4.0.0" }, "peerDependencies": { "@next/eslint-plugin-next": "^14.0.0 || ^15.0.0 || ^16.0.0", "eslint": ">=9.0.0", "eslint-plugin-n": "^17.0.0", "eslint-plugin-react": "^7.37.0", "eslint-plugin-react-hooks": "^5.0.0 || ^7.0.0" }, "optionalPeers": ["@next/eslint-plugin-next", "eslint-plugin-n", "eslint-plugin-react", "eslint-plugin-react-hooks"] }, "sha512-IRtalRZkF9Fdmjj2kyUJ+HSBouwWJaZkc0B8qfQRDaYFCAFwyGhMv1wR2BwNyUAGK4pl8rDzsGLSYpTIEyBWGA=="],
