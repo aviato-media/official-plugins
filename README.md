@@ -10,6 +10,7 @@ These [Aviato](https://avi.ato.software/) plugins maintained by the [Ato](https:
 | [fs-local](./plugins/fs-local/) | Adds local filesystem sources to your Aviato libraries. |
 | [library-audiobooks](./plugins/library-audiobooks/) | Audiobook library with author/narrator/series browsing and chapters. |
 | [library-books](./plugins/library-books/) | Ebook library with author, series, and publisher browsing. |
+| [library-movies](./plugins/library-movies/) | Movie library with rich metadata, trailers, and extras classification. |
 
 These plugins are open-sourced (see [LICENSE](./LICENSE)) and double as reference implementations for the Aviato plugin system. Contributions are welcome — see [CONTRIBUTING.md](./CONTRIBUTING.md).
 

@@ -1,0 +1,51 @@
+{
+  "id": "@aviato-media/library-movies",
+  "name": "Movies Library",
+  "version": "1.0.0",
+  "capabilities": ["library"],
+  "mediaTypes": ["movies"],
+  "description": "Movie library with rich metadata display, filtering, and sorting",
+  "author": "Aviato",
+  "license": "MIT",
+  "engine": "bun",
+  "entry": "dist/index.js",
+  "aviato": {
+    "minVersion": "0.1.0"
+  },
+  "capabilityConfig": {
+    "library": {
+      "bundling": {
+        "strategy": "per-folder"
+      },
+      "paths": [
+        {
+          "extensions": ["system:video"]
+        },
+        {
+          "type": "trailer",
+          "rules": ["*trailer*", "trailers/**/*"],
+          "extensions": ["system:video"]
+        },
+        {
+          "type": "behind-the-scenes",
+          "rules": ["*behind?the?scenes*", "*behindthescenes*", "behind?the?scenes/**/*", "*making?of*", "*makingof*", "*bts*"],
+          "extensions": ["system:video"]
+        },
+        {
+          "type": "deleted-scene",
+          "rules": ["*deleted?scene*", "*deletedscene*", "deleted?scenes/**/*"],
+          "extensions": ["system:video"]
+        },
+        {
+          "type": "extra",
+          "rules": ["extras/**/*", "featurettes/**/*", "other/**/*", "shorts/**/*", "scenes/**/*", "*featurette*", "*bonus*", "*interview*"],
+          "extensions": ["system:video"]
+        },
+        {
+          "type": "companion",
+          "extensions": ["system:text", ".nfo", ".jpg", ".jpeg", ".png", ".webp", ".srt", ".ass", ".ssa", ".vtt", ".sub"]
+        }
+      ]
+    }
+  }
+}
