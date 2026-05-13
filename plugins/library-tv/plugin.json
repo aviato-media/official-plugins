@@ -1,7 +1,7 @@
 {
   "id": "@aviato-media/library-tv",
   "name": "TV Shows Library",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "TV show library with series/season/episode browsing, rich metadata display, and filtering",
   "author": "Aviato",
   "license": "MIT",
@@ -56,7 +56,10 @@
           "type": "companion",
           "extensions": ["system:text", ".nfo", ".jpg", ".jpeg", ".png", ".webp", ".srt", ".ass", ".ssa", ".vtt", ".sub"]
         }
-      ]
+      ],
+      "dedup": {
+        "providers": ["tvdb", "tmdb", "imdb"]
+      }
     }
   }
 }

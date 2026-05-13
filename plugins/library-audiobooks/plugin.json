@@ -1,7 +1,7 @@
 {
   "id": "@aviato-media/library-audiobooks",
   "name": "Audiobooks Library",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Audiobook library with author/narrator/series browsing and chapter display",
   "author": "Aviato",
   "license": "MIT",
@@ -32,7 +32,10 @@
           "type": "companion",
           "extensions": [".pdf", ".opf", ".jpg", ".jpeg", ".png", ".webp"]
         }
-      ]
+      ],
+      "dedup": {
+        "providers": ["audible", "isbn"]
+      }
     }
   }
 }

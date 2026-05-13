@@ -1,6 +1,6 @@
 {
   "name": "@aviato-media/library-music",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "type": "module",
   "description": "Music library with artist/album/track browsing, audio tag display, and filtering.",
   "license": "MIT",

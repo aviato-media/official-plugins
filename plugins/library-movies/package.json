@@ -1,6 +1,6 @@
 {
   "name": "@aviato-media/library-movies",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "type": "module",
   "description": "Movie library with rich metadata display, filtering, and sorting.",
   "license": "MIT",

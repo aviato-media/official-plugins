@@ -1,7 +1,7 @@
 {
   "id": "@aviato-media/library-books",
   "name": "Books Library",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Ebook library with author, series, and publisher browsing",
   "author": "Aviato",
   "license": "MIT",
@@ -30,7 +30,10 @@
           "type": "companion",
           "extensions": [".opf", ".jpg", ".jpeg", ".png", ".webp"]
         }
-      ]
+      ],
+      "dedup": {
+        "providers": ["isbn"]
+      }
     }
   }
 }

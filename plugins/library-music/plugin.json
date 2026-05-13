@@ -1,7 +1,7 @@
 {
   "id": "@aviato-media/library-music",
   "name": "Music Library",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Music library with artist/album/track browsing, audio tag display, and filtering",
   "author": "Aviato",
   "license": "MIT",
@@ -33,7 +33,10 @@
           "type": "companion",
           "extensions": [".pdf", ".lrc", ".cue", ".jpg", ".jpeg", ".png", ".webp"]
         }
-      ]
+      ],
+      "dedup": {
+        "providers": ["musicbrainz"]
+      }
     }
   }
 }

@@ -1,7 +1,7 @@
 {
   "id": "@aviato-media/library-movies",
   "name": "Movies Library",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "capabilities": ["library"],
   "mediaTypes": ["movies"],
   "description": "Movie library with rich metadata display, filtering, and sorting",
@@ -45,7 +45,10 @@
           "type": "companion",
           "extensions": ["system:text", ".nfo", ".jpg", ".jpeg", ".png", ".webp", ".srt", ".ass", ".ssa", ".vtt", ".sub"]
         }
-      ]
+      ],
+      "dedup": {
+        "providers": ["tmdb", "imdb"]
+      }
     }
   }
 }
