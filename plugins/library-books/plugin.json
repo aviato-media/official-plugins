@@ -1,0 +1,36 @@
+{
+  "id": "@aviato-media/library-books",
+  "name": "Books Library",
+  "version": "1.0.0",
+  "description": "Ebook library with author, series, and publisher browsing",
+  "author": "Aviato",
+  "license": "MIT",
+  "engine": "bun",
+  "entry": "dist/index.js",
+  "aviato": {
+    "minVersion": "0.1.0"
+  },
+  "capabilities": ["library"],
+  "mediaTypes": {
+    "books": {
+      "seekable": false,
+      "idleProtection": false
+    }
+  },
+  "capabilityConfig": {
+    "library": {
+      "bundling": {
+        "strategy": "per-file"
+      },
+      "paths": [
+        {
+          "extensions": [".epub", ".pdf", ".doc", ".docx", ".txt"]
+        },
+        {
+          "type": "companion",
+          "extensions": [".opf", ".jpg", ".jpeg", ".png", ".webp"]
+        }
+      ]
+    }
+  }
+}
