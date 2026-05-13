@@ -1,0 +1,19 @@
+{
+  "name": "@aviato-media/library-music",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Music library with artist/album/track browsing, audio tag display, and filtering.",
+  "license": "MIT",
+  "scripts": {
+    "build": "bun build src/index.ts --outdir dist --target bun --minify --external zod",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "test": "bun test"
+  },
+  "dependencies": {
+    "@aviato-media/plugin-sdk": "^1.0.0"
+  },
+  "devDependencies": {
+    "@types/bun": "^1.3.13",
+    "typescript": "^6.0.3"
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "id": "@aviato-media/external-metadata",
+  "name": "External Metadata Reader",
+  "version": "1.0.0",
+  "description": "Reads sidecar metadata files (.nfo for video, .opf for ebooks) and merges their fields, IDs, artwork, and entities into the bundle",
+  "author": "Aviato",
+  "license": "MIT",
+  "engine": "bun",
+  "entry": "dist/index.js",
+  "aviato": {
+    "minVersion": "0.1.0"
+  },
+  "capabilities": [],
+  "subscriptions": {
+    "hooks": [
+      {
+        "name": "pipeline.probe.afterProcess",
+        "order": 30,
+        "requiresLocalFile": true
+      }
+    ]
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "id": "@aviato-media/library-music",
+  "name": "Music Library",
+  "version": "1.0.0",
+  "description": "Music library with artist/album/track browsing, audio tag display, and filtering",
+  "author": "Aviato",
+  "license": "MIT",
+  "engine": "bun",
+  "entry": "dist/index.js",
+  "aviato": {
+    "minVersion": "0.1.0"
+  },
+  "capabilities": ["library"],
+  "mediaTypes": {
+    "music": {
+      "queueStyle": "panel",
+      "autoplay": true,
+      "queueStrategy": "eager",
+      "shuffleStyle": "prominent",
+      "repeatStyle": "prominent"
+    }
+  },
+  "capabilityConfig": {
+    "library": {
+      "bundling": {
+        "strategy": "per-file"
+      },
+      "paths": [
+        {
+          "extensions": ["system:audio"]
+        },
+        {
+          "type": "companion",
+          "extensions": [".pdf", ".lrc", ".cue", ".jpg", ".jpeg", ".png", ".webp"]
+        }
+      ]
+    }
+  }
+}

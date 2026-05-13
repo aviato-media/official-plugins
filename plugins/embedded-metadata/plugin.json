@@ -1,0 +1,23 @@
+{
+  "id": "@aviato-media/embedded-metadata",
+  "name": "Embedded Metadata",
+  "version": "1.0.0",
+  "description": "Extracts embedded metadata tags and cover art from media containers using ffprobe",
+  "author": "Aviato",
+  "license": "MIT",
+  "engine": "bun",
+  "entry": "dist/index.js",
+  "aviato": {
+    "minVersion": "0.1.0"
+  },
+  "capabilities": [],
+  "subscriptions": {
+    "hooks": [
+      {
+        "name": "pipeline.probe.afterProcess",
+        "order": 20,
+        "requiresLocalFile": true
+      }
+    ]
+  }
+}

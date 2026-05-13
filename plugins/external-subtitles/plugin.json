@@ -1,0 +1,22 @@
+{
+  "id": "@aviato-media/external-subtitles",
+  "name": "External Subtitles",
+  "version": "1.0.0",
+  "description": "Discovers external subtitle sidecar files (.srt/.ass/.ssa/.vtt/.sub) and surfaces embedded subtitle streams already extracted by ffprobe",
+  "author": "Aviato",
+  "license": "MIT",
+  "engine": "bun",
+  "entry": "dist/index.js",
+  "aviato": {
+    "minVersion": "0.1.0"
+  },
+  "capabilities": [],
+  "subscriptions": {
+    "hooks": [
+      {
+        "name": "pipeline.probe.afterProcess",
+        "order": 50
+      }
+    ]
+  }
+}

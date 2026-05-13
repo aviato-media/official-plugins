@@ -1,0 +1,23 @@
+{
+  "id": "@aviato-media/thumbnails",
+  "name": "Thumbnail Generator",
+  "version": "0.1.0",
+  "capabilities": [],
+  "description": "Generates thumbnail images from media files using FFmpeg when no artwork exists",
+  "author": "Aviato",
+  "license": "MIT",
+  "engine": "bun",
+  "entry": "dist/index.js",
+  "aviato": {
+    "minVersion": "0.1.0"
+  },
+  "subscriptions": {
+    "hooks": [
+      {
+        "name": "pipeline.probe.afterProcess",
+        "order": 90,
+        "requiresLocalFile": true
+      }
+    ]
+  }
+}
