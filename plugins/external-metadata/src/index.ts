@@ -12,7 +12,7 @@ import { parseOpf } from './opf-parser.js'
 
 type BundleEntity = NonNullable<Bundle['entities']>[number]
 
-const PLUGIN_ID = 'aviato-external-metadata'
+const PLUGIN_ID = '@aviato-media/external-metadata'
 
 export interface ProbePayload extends Record<string, unknown> {
   itemId: string

@@ -1,7 +1,7 @@
 {
   "id": "@aviato-media/embedded-metadata",
   "name": "Embedded Metadata",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Extracts embedded metadata tags and cover art from media containers using ffprobe",
   "author": "Aviato",
   "license": "MIT",

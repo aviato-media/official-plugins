@@ -1,6 +1,6 @@
 {
   "name": "@aviato-media/posters",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "type": "module",
   "description": "Discovers local poster, fanart, banner, thumb, landscape, and cover image files alongside media.",
   "license": "MIT",

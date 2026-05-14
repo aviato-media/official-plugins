@@ -9,7 +9,7 @@ import { parseEpub } from './parsers/epub.js'
 import { parsePdf } from './parsers/pdf.js'
 import type { ExtractedChapter, ExtractedCover, ParsedBookMetadata } from './types.js'
 
-const PLUGIN_ID = 'aviato-metadata-books'
+const PLUGIN_ID = '@aviato-media/metadata-books'
 const SUPPORTED = new Set(['epub', 'pdf', 'docx'])
 
 /**

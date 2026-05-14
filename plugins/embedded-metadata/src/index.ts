@@ -7,7 +7,7 @@ import { extractCoverArt } from './extract-artwork.js'
 import type { ProbeOutput } from './probe.js'
 import { detectCoverArtStream, parseProbeOutput, runFfprobe } from './probe.js'
 
-const PLUGIN_ID = 'aviato-embedded-metadata'
+const PLUGIN_ID = '@aviato-media/embedded-metadata'
 const DEFAULT_FFPROBE_TIMEOUT = 15_000
 const DEFAULT_FFMPEG_TIMEOUT = 30_000
 

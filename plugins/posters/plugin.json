@@ -1,7 +1,7 @@
 {
   "id": "@aviato-media/posters",
   "name": "Local Poster & Artwork",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Discovers local poster, fanart, banner, thumb, landscape, and cover image files alongside media — the SeeFood of your library",
   "author": "Aviato",
   "license": "MIT",

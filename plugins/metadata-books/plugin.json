@@ -1,7 +1,7 @@
 {
   "id": "@aviato-media/metadata-books",
   "name": "Books Metadata Extractor",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Extracts embedded metadata and cover art from EPUB, PDF, and DOCX ebook files",
   "author": "Aviato",
   "license": "MIT",

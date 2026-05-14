@@ -4,7 +4,7 @@ import { basename } from 'path'
 
 import { detectArtworkType, getMediaStem, mimeTypeForImage } from './utils.js'
 
-const PLUGIN_ID = 'aviato-posters'
+const PLUGIN_ID = '@aviato-media/posters'
 
 export interface ProbePayload extends Record<string, unknown> {
   itemId: string

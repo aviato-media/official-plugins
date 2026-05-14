@@ -1,7 +1,7 @@
 {
   "id": "@aviato-media/external-metadata",
   "name": "External Metadata Reader",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Reads sidecar metadata files (.nfo for video, .opf for ebooks) and merges their fields, IDs, artwork, and entities into the bundle",
   "author": "Aviato",
   "license": "MIT",

@@ -13,7 +13,7 @@ import {
 
 type BundleSubtitle = NonNullable<Bundle['subtitles']>[number]
 
-const PLUGIN_ID = 'aviato-external-subtitles'
+const PLUGIN_ID = '@aviato-media/external-subtitles'
 
 export interface ProbePayload extends Record<string, unknown> {
   itemId: string

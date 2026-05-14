@@ -1,6 +1,6 @@
 {
   "name": "@aviato-media/external-metadata",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "type": "module",
   "description": "Reads sidecar metadata files (.nfo for video, .opf for ebooks) and merges their fields, IDs, artwork, and entities into the bundle.",
   "license": "MIT",
