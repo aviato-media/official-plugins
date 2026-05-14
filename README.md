@@ -18,8 +18,10 @@ These [Aviato](https://avi.ato.software/) plugins maintained by the [Ato](https:
 | [library-tv](./plugins/library-tv/) | TV show library with series/season/episode browsing. |
 | [metadata-books](./plugins/metadata-books/) | Extracts metadata and cover art from EPUB, PDF, and DOCX ebooks. |
 | [musicbrainz](./plugins/musicbrainz/) | Indexes music files via MusicBrainz and Cover Art Archive. |
+| [openwith-iina](./plugins/openwith-iina/) | Adds IINA to the Open With menu for video items on macOS. |
+| [openwith-vlc](./plugins/openwith-vlc/) | Adds VLC to the Open With menu for video items. |
 | [posters](./plugins/posters/) | Discovers local poster, fanart, banner, and cover image sidecars. |
-| [thumbnails](./plugins/thumbnails/) | Generates thumbnails from media files using FFmpeg when no artwork exists. |
+| [thumbnails](./plugins/thumbnails/) | Generates thumbnails from media files using FFmpeg. |
 | [tmdb](./plugins/tmdb/) | Indexes movies and TV shows via The Movie Database (TMDb). |
 
 These plugins are open-sourced (see [LICENSE](./LICENSE)) and double as reference implementations for the Aviato plugin system. Contributions are welcome — see [CONTRIBUTING.md](./CONTRIBUTING.md).

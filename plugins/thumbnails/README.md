@@ -1,6 +1,6 @@
 # @aviato-media/thumbnails
 
-Pipeline subscriber that generates thumbnail images from media files using FFmpeg when no artwork exists. Runs late in the probe chain (order 90) so other artwork sources get a chance first.
+Pipeline subscriber that generates thumbnail images from media files using FFmpeg. Runs late in the probe chain (order 90) so other artwork sources get a chance first.
 
 ## Capabilities
 
