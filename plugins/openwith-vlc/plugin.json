@@ -1,0 +1,22 @@
+{
+  "id": "@aviato-media/openwith-vlc",
+  "name": "Open With VLC",
+  "version": "1.0.0",
+  "description": "Adds VLC to the Open With menu for video items.",
+  "author": "Aviato",
+  "license": "MIT",
+  "engine": "bun",
+  "entry": "dist/index.js",
+  "aviato": {
+    "minVersion": "0.1.0"
+  },
+  "capabilities": [],
+  "subscriptions": {
+    "hooks": [
+      {
+        "name": "ui.openWith",
+        "order": 10
+      }
+    ]
+  }
+}
