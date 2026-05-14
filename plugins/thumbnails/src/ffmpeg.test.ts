@@ -2,17 +2,24 @@ import type { PluginClient, RunResult } from '@aviato-media/plugin-sdk'
 import { describe, expect, test } from 'bun:test'
 
 import {
+  BLACK_LUMA_THRESHOLD,
   buildAudioArgs,
   buildImageArgs,
   buildProbeRotationArgs,
   buildRotationFilter,
+  buildTimestampCandidates,
   buildVideoArgs,
   calculateTimestamp,
   detectVideoRotation,
+  frameQuality,
   isAudio,
+  isFrameDegenerate,
   isImage,
   isVideo,
+  LOW_VARIANCE_SPREAD_THRESHOLD,
+  parseFrameStats,
   parseRotation,
+  runFfmpeg,
 } from './ffmpeg'
 
 function mockClient (run: (cmd: string, args: string[]) => Promise<RunResult>): PluginClient {
@@ -90,6 +97,25 @@ describe('buildVideoArgs', () => {
     const inputIdx = args.indexOf('-i')
     expect(noAuto).toBeGreaterThan(-1)
     expect(noAuto).toBeLessThan(inputIdx)
+  })
+  test('analyze:true prepends signalstats+metadata=print to the -vf chain', () => {
+    const args = buildVideoArgs('/input/movie.mkv', '/output/thumb.jpg', '00:05:00', { analyze: true })
+    const vfIndex = args.indexOf('-vf')
+    expect(args[vfIndex + 1]).toBe('signalstats,metadata=mode=print:file=-,scale=300:-1')
+  })
+  test('analyze:true composes correctly with rotation', () => {
+    const args = buildVideoArgs('/input/portrait.mp4', '/output/thumb.jpg', '00:00:01', {
+      rotation: 90,
+      analyze: true,
+    })
+    const vfIndex = args.indexOf('-vf')
+    expect(args[vfIndex + 1]).toBe('signalstats,metadata=mode=print:file=-,transpose=1,scale=300:-1')
+    expect(args).toContain('-noautorotate')
+  })
+  test('analyze:false (default) omits signalstats so existing callers are unaffected', () => {
+    const args = buildVideoArgs('/input/movie.mkv', '/output/thumb.jpg', '00:05:00')
+    const vfIndex = args.indexOf('-vf')
+    expect(args[vfIndex + 1]).not.toContain('signalstats')
   })
 })
 
@@ -346,6 +372,207 @@ describe('isImage', () => {
   test('rejects non-image extensions', () => {
     expect(isImage('mkv')).toBe(false)
     expect(isImage('')).toBe(false)
+  })
+})
+
+describe('buildTimestampCandidates', () => {
+  test('returns a single early offset when duration is unknown or invalid', () => {
+    expect(buildTimestampCandidates()).toEqual(['00:00:01'])
+    expect(buildTimestampCandidates(0)).toEqual(['00:00:01'])
+    expect(buildTimestampCandidates(-1)).toEqual(['00:00:01'])
+  })
+  test('leads with the 10% offset so the happy path matches calculateTimestamp', () => {
+    const candidates = buildTimestampCandidates(600)
+    expect(candidates[0]).toBe(calculateTimestamp(600))
+  })
+  test('fans out across the clip for typical durations', () => {
+    // 1000s clip: 10%, 25%, and 5% stay under the 5-minute cap; 50%, 40%, 75%
+    // and 90% all collapse onto 00:05:00 and dedupe to a single entry.
+    expect(buildTimestampCandidates(1000)).toEqual([
+      '00:01:40', '00:04:10', '00:05:00', '00:00:50',
+    ])
+  })
+  test('caps each candidate at the legacy 5-minute bound', () => {
+    for (const ts of buildTimestampCandidates(7200)) {
+      const [h, m] = ts.split(':').map(Number)
+      expect(h * 3600 + m * 60).toBeLessThanOrEqual(300)
+    }
+  })
+  test('deduplicates collapsed candidates without preserving empty slots', () => {
+    const candidates = buildTimestampCandidates(5)
+    const unique = new Set(candidates)
+    expect(candidates.length).toBe(unique.size)
+    expect(candidates.length).toBeGreaterThan(1)
+  })
+})
+
+function statsOutput (yavg: number, ylow: number, yhigh: number): string {
+  return [
+    'frame:0    pts:0      pts_time:0',
+    'lavfi.signalstats.YMIN=0',
+    `lavfi.signalstats.YLOW=${ylow}`,
+    `lavfi.signalstats.YAVG=${yavg}`,
+    `lavfi.signalstats.YHIGH=${yhigh}`,
+    'lavfi.signalstats.YMAX=255',
+  ].join('\n')
+}
+
+describe('parseFrameStats', () => {
+  test('extracts YAVG, YLOW and YHIGH together', () => {
+    const stats = parseFrameStats(statsOutput(80, 20, 220))
+    expect(stats).toEqual({
+      yavg: 80,
+      ylow: 20,
+      yhigh: 220,
+    })
+  })
+  test('handles fractional and scientific notation', () => {
+    const stats = parseFrameStats([
+      'lavfi.signalstats.YAVG=12.345',
+      'lavfi.signalstats.YLOW=1.5e1',
+      'lavfi.signalstats.YHIGH=200',
+    ].join('\n'))
+    expect(stats!.yavg).toBeCloseTo(12.345, 3)
+    expect(stats!.ylow).toBe(15)
+    expect(stats!.yhigh).toBe(200)
+  })
+  test('returns null when any of the three required tags is missing', () => {
+    expect(parseFrameStats('lavfi.signalstats.YAVG=80\nlavfi.signalstats.YLOW=20')).toBe(null)
+    expect(parseFrameStats('lavfi.signalstats.YAVG=80\nlavfi.signalstats.YHIGH=220')).toBe(null)
+    expect(parseFrameStats('')).toBe(null)
+  })
+  test('returns null when any tag value is non-finite', () => {
+    expect(parseFrameStats([
+      'lavfi.signalstats.YAVG=nan',
+      'lavfi.signalstats.YLOW=20',
+      'lavfi.signalstats.YHIGH=220',
+    ].join('\n'))).toBe(null)
+  })
+})
+
+describe('isFrameDegenerate', () => {
+  test('flags frames whose average luma is below the black threshold', () => {
+    expect(isFrameDegenerate({
+      yavg: 0,
+      ylow: 0,
+      yhigh: 50,
+    })).toBe(true)
+    expect(isFrameDegenerate({
+      yavg: BLACK_LUMA_THRESHOLD - 0.01,
+      ylow: 0,
+      yhigh: 50,
+    })).toBe(true)
+  })
+  test('flags low-variance frames even when not dark', () => {
+    // Solid grey slate: YAVG well above black, but YHIGH-YLOW collapses.
+    expect(isFrameDegenerate({
+      yavg: 128,
+      ylow: 126,
+      yhigh: 130,
+    })).toBe(true)
+    expect(isFrameDegenerate({
+      yavg: 200,
+      ylow: 195,
+      yhigh: 200,
+    })).toBe(true)
+  })
+  test('accepts dark scenes that still have meaningful tonal range', () => {
+    // Night-time shot with a single highlight: YAVG low but spread wide.
+    expect(isFrameDegenerate({
+      yavg: 30,
+      ylow: 10,
+      yhigh: 180,
+    })).toBe(false)
+  })
+  test('accepts ordinary frames', () => {
+    expect(isFrameDegenerate({
+      yavg: 110,
+      ylow: 30,
+      yhigh: 200,
+    })).toBe(false)
+    expect(isFrameDegenerate({
+      yavg: 200,
+      ylow: 100,
+      yhigh: 250,
+    })).toBe(false)
+  })
+  test('the spread cutoff matches LOW_VARIANCE_SPREAD_THRESHOLD', () => {
+    expect(isFrameDegenerate({
+      yavg: 100,
+      ylow: 100,
+      yhigh: 100 + LOW_VARIANCE_SPREAD_THRESHOLD - 1,
+    })).toBe(true)
+    expect(isFrameDegenerate({
+      yavg: 100,
+      ylow: 100,
+      yhigh: 100 + LOW_VARIANCE_SPREAD_THRESHOLD,
+    })).toBe(false)
+  })
+  test('does not flag stats containing non-finite values (treat probe junk as accept)', () => {
+    expect(isFrameDegenerate({
+      yavg: Number.NaN,
+      ylow: 0,
+      yhigh: 50,
+    })).toBe(false)
+    expect(isFrameDegenerate({
+      yavg: 100,
+      ylow: Number.POSITIVE_INFINITY,
+      yhigh: 200,
+    })).toBe(false)
+  })
+})
+
+describe('frameQuality', () => {
+  test('returns the YHIGH-YLOW spread so wider tonal range scores higher', () => {
+    expect(frameQuality({
+      yavg: 100,
+      ylow: 30,
+      yhigh: 200,
+    })).toBe(170)
+    expect(frameQuality({
+      yavg: 100,
+      ylow: 99,
+      yhigh: 101,
+    })).toBe(2)
+  })
+  test('ranks a dark-but-detailed frame above a uniform grey slate', () => {
+    const darkDetailed = frameQuality({
+      yavg: 20,
+      ylow: 0,
+      yhigh: 180,
+    })
+    const greySlate = frameQuality({
+      yavg: 128,
+      ylow: 126,
+      yhigh: 130,
+    })
+    expect(darkDetailed).toBeGreaterThan(greySlate)
+  })
+})
+
+describe('runFfmpeg', () => {
+  test('returns { ok: true, stdout } when ffmpeg exits 0 and includes signalstats output', async () => {
+    const stdout = statsOutput(80, 30, 200)
+    const client = mockClient(async () => probeResult(stdout))
+    expect(await runFfmpeg(client, ['-i', '/x.mp4'])).toEqual({
+      ok: true,
+      stdout,
+    })
+  })
+  test('returns { ok: false } when ffmpeg exits non-zero', async () => {
+    const client = mockClient(async () => probeResult('partial output', 1))
+    const result = await runFfmpeg(client, ['-i', '/x.mp4'])
+    expect(result.ok).toBe(false)
+    expect(result.stdout).toBe('partial output')
+  })
+  test('returns { ok: false, stdout: "" } when client.run throws', async () => {
+    const client = mockClient(async () => {
+      throw new Error('boom')
+    })
+    expect(await runFfmpeg(client, ['-i', '/x.mp4'])).toEqual({
+      ok: false,
+      stdout: '',
+    })
   })
 })
 

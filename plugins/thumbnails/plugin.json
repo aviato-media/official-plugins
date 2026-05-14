@@ -1,9 +1,9 @@
 {
   "id": "@aviato-media/thumbnails",
   "name": "Thumbnail Generator",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "capabilities": [],
-  "description": "Generates thumbnail images from media files using FFmpeg when no artwork exists",
+  "description": "Generates thumbnail images from media files using FFmpeg",
   "author": "Aviato",
   "license": "MIT",
   "engine": "bun",

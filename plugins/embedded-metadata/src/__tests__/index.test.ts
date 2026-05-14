@@ -276,7 +276,7 @@ describe('processProbe', () => {
     expect(result?.bundle.assets).toHaveLength(1)
     const asset = result?.bundle.assets?.[0]
     expect(asset?.type).toBe('poster')
-    expect(asset?.source).toBe('aviato-embedded-metadata')
+    expect(asset?.source).toBe('@aviato-media/embedded-metadata')
     expect(asset?.mediaFileId).toBeUndefined()
     expect(asset?.path).toBeDefined()
     const written = await readFile(asset!.path!)

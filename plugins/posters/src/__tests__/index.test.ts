@@ -53,13 +53,13 @@ describe('processProbe (posters)', () => {
     expect(result?.bundle.assets).toContainEqual({
       type: 'poster',
       path: '/m/Inception-poster.jpg',
-      source: 'aviato-posters',
+      source: '@aviato-media/posters',
       mimeType: 'image/jpeg',
     })
     expect(result?.bundle.assets).toContainEqual({
       type: 'fanart',
       path: '/m/Inception-fanart.jpg',
-      source: 'aviato-posters',
+      source: '@aviato-media/posters',
       mimeType: 'image/jpeg',
     })
   })
@@ -84,19 +84,19 @@ describe('processProbe (posters)', () => {
     expect(result?.bundle.assets).toContainEqual({
       type: 'poster',
       path: '/m/poster.jpg',
-      source: 'aviato-posters',
+      source: '@aviato-media/posters',
       mimeType: 'image/jpeg',
     })
     expect(result?.bundle.assets).toContainEqual({
       type: 'banner',
       path: '/m/banner.png',
-      source: 'aviato-posters',
+      source: '@aviato-media/posters',
       mimeType: 'image/png',
     })
     expect(result?.bundle.assets).toContainEqual({
       type: 'cover',
       path: '/m/folder.webp',
-      source: 'aviato-posters',
+      source: '@aviato-media/posters',
       mimeType: 'image/webp',
     })
   })
@@ -113,7 +113,7 @@ describe('processProbe (posters)', () => {
       assets: [{
         type: 'poster',
         path: '/managed/existing-poster.jpg',
-        source: 'aviato-tmdb',
+        source: '@aviato-media/tmdb',
       }],
     }
 
@@ -124,8 +124,8 @@ describe('processProbe (posters)', () => {
 
     // Existing poster is preserved; only fanart is added.
     expect(result?.bundle.assets).toHaveLength(2)
-    expect(result?.bundle.assets?.some(a => a.source === 'aviato-tmdb' && a.type === 'poster')).toBe(true)
-    expect(result?.bundle.assets?.some(a => a.source === 'aviato-posters' && a.type === 'fanart')).toBe(true)
+    expect(result?.bundle.assets?.some(a => a.source === '@aviato-media/tmdb' && a.type === 'poster')).toBe(true)
+    expect(result?.bundle.assets?.some(a => a.source === '@aviato-media/posters' && a.type === 'fanart')).toBe(true)
   })
 
   test('dedupes when multiple files map to the same artwork type', () => {

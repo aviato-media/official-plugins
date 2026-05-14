@@ -52,7 +52,7 @@ describe('processProbe (external-subtitles)', () => {
       path: '/m/Movie.en.srt',
       language: 'en',
       format: 'srt',
-      source: 'aviato-external-subtitles',
+      source: '@aviato-media/external-subtitles',
       mediaFileUri: 'file:///m/Movie.mkv',
     })
     expect(subs).toContainEqual({
@@ -60,7 +60,7 @@ describe('processProbe (external-subtitles)', () => {
       path: '/m/Movie.ja.forced.ass',
       language: 'ja.forced',
       format: 'ass',
-      source: 'aviato-external-subtitles',
+      source: '@aviato-media/external-subtitles',
       mediaFileUri: 'file:///m/Movie.mkv',
     })
     expect(subs).toContainEqual({
@@ -68,7 +68,7 @@ describe('processProbe (external-subtitles)', () => {
       path: '/m/Movie.srt',
       language: 'und',
       format: 'srt',
-      source: 'aviato-external-subtitles',
+      source: '@aviato-media/external-subtitles',
       mediaFileUri: 'file:///m/Movie.mkv',
     })
   })
@@ -150,7 +150,7 @@ describe('processProbe (external-subtitles)', () => {
       language: 'eng',
       format: 'srt',
       streamIndex: 2,
-      source: 'aviato-external-subtitles',
+      source: '@aviato-media/external-subtitles',
       mediaFileUri: 'file:///m/Movie.mkv',
     })
     expect(subs).toContainEqual({
@@ -158,7 +158,7 @@ describe('processProbe (external-subtitles)', () => {
       language: 'jpn',
       format: 'ass',
       streamIndex: 3,
-      source: 'aviato-external-subtitles',
+      source: '@aviato-media/external-subtitles',
       mediaFileUri: 'file:///m/Movie.mkv',
     })
     expect(subs).toContainEqual({
@@ -166,7 +166,7 @@ describe('processProbe (external-subtitles)', () => {
       language: 'und',
       format: 'pgs',
       streamIndex: 4,
-      source: 'aviato-external-subtitles',
+      source: '@aviato-media/external-subtitles',
       mediaFileUri: 'file:///m/Movie.mkv',
     })
   })
@@ -198,7 +198,7 @@ describe('processProbe (external-subtitles)', () => {
         path: '/m/Movie.en.srt',
         language: 'en',
         format: 'srt',
-        source: 'aviato-external-subtitles',
+        source: '@aviato-media/external-subtitles',
         mediaFileUri: 'file:///m/Movie.mkv',
       }],
     }
@@ -234,6 +234,6 @@ describe('processProbe (external-subtitles)', () => {
     const subs = result?.bundle.subtitles ?? []
     expect(subs).toHaveLength(2)
     expect(subs[0].source).toBe('some-other-plugin')
-    expect(subs[1].source).toBe('aviato-external-subtitles')
+    expect(subs[1].source).toBe('@aviato-media/external-subtitles')
   })
 })

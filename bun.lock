@@ -28,7 +28,7 @@
     },
     "plugins/embedded-metadata": {
       "name": "@aviato-media/embedded-metadata",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "dependencies": {
         "@aviato-media/plugin-sdk": "catalog:",
       },
@@ -39,7 +39,7 @@
     },
     "plugins/external-metadata": {
       "name": "@aviato-media/external-metadata",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "dependencies": {
         "@aviato-media/plugin-sdk": "catalog:",
         "fast-xml-parser": "^5.2.0",
@@ -51,7 +51,7 @@
     },
     "plugins/external-subtitles": {
       "name": "@aviato-media/external-subtitles",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "dependencies": {
         "@aviato-media/plugin-sdk": "catalog:",
       },
@@ -130,7 +130,7 @@
     },
     "plugins/metadata-books": {
       "name": "@aviato-media/metadata-books",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "dependencies": {
         "@aviato-media/plugin-sdk": "catalog:",
         "fast-xml-parser": "^4.5.0",
@@ -177,7 +177,7 @@
     },
     "plugins/posters": {
       "name": "@aviato-media/posters",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "dependencies": {
         "@aviato-media/plugin-sdk": "catalog:",
       },
@@ -188,7 +188,7 @@
     },
     "plugins/thumbnails": {
       "name": "@aviato-media/thumbnails",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "dependencies": {
         "@aviato-media/plugin-sdk": "catalog:",
       },
@@ -210,7 +210,7 @@
     },
   },
   "catalog": {
-    "@aviato-media/plugin-sdk": "^1.1.0",
+    "@aviato-media/plugin-sdk": "^1.1.1",
   },
   "packages": {
     "@aviato-media/audible": ["@aviato-media/audible@workspace:plugins/audible"],
@@ -241,7 +241,7 @@
 
     "@aviato-media/openwith-vlc": ["@aviato-media/openwith-vlc@workspace:plugins/openwith-vlc"],
 
-    "@aviato-media/plugin-sdk": ["@aviato-media/plugin-sdk@1.1.0", "", { "dependencies": { "picomatch": "^4.0.4", "zod": "4.3.6" } }, "sha512-/kwBTze8EXw1S2KGvyAHjjVm6ah61dmluWyZf361fi1RqOYho7uJcNFLSnYO9Np6pDdgG+vzgR6Q4myw6Ow63Q=="],
+    "@aviato-media/plugin-sdk": ["@aviato-media/plugin-sdk@1.1.1", "", { "dependencies": { "picomatch": "^4.0.4", "zod": "4.3.6" } }, "sha512-vF3TTxVFadOCp4PTaHVC2KZSixiRCCGdkFOPvHDPMcehJPFRR7C+3ROfWn1GYVtaNRShT5wx/VXEDOFhp20zRw=="],
 
     "@aviato-media/posters": ["@aviato-media/posters@workspace:plugins/posters"],
 

@@ -56,14 +56,14 @@ describe('processProbe (external-metadata)', () => {
     expect(result?.bundle.assets?.[0]).toEqual({
       type: 'poster',
       uri: 'poster.jpg',
-      source: 'aviato-external-metadata',
+      source: '@aviato-media/external-metadata',
     })
     const entities = result?.bundle.entities ?? []
     expect(entities).toContainEqual({
       role: 'director',
       name: 'Ridley Scott',
       status: 'pending',
-      source: 'aviato-external-metadata',
+      source: '@aviato-media/external-metadata',
     })
     expect(entities).toContainEqual({
       role: 'actor',
@@ -72,7 +72,7 @@ describe('processProbe (external-metadata)', () => {
       metadata: {
         character: 'Rick Deckard',
       },
-      source: 'aviato-external-metadata',
+      source: '@aviato-media/external-metadata',
     })
   })
 
@@ -118,13 +118,13 @@ describe('processProbe (external-metadata)', () => {
       role: 'author',
       name: 'Cixin Liu',
       status: 'pending',
-      source: 'aviato-external-metadata',
+      source: '@aviato-media/external-metadata',
     })
     expect(entities).toContainEqual({
       role: 'narrator',
       name: 'Luke Daniels',
       status: 'pending',
-      source: 'aviato-external-metadata',
+      source: '@aviato-media/external-metadata',
     })
   })
 

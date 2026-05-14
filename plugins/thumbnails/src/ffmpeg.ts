@@ -2,8 +2,25 @@ import type { PluginClient } from '@aviato-media/plugin-sdk'
 
 const THUMBNAIL_WIDTH = 300
 const QUALITY = '5'
-const FFMPEG_TIMEOUT = 30_000
-const FFPROBE_TIMEOUT = 10_000
+// Single-frame thumbnail extraction is near-instant on healthy media; a long
+// timeout here only serves to compound when a file is genuinely broken (we
+// retry once on failure, so the effective budget is 2x). Keep tight so bad
+// files fail fast and don't dominate the per-bundle hook budget.
+const FFMPEG_TIMEOUT = 10_000
+const FFPROBE_TIMEOUT = 5_000
+
+// Average luma (Y, 0-255) below which a thumbnail is treated as "essentially
+// black" and the caller should try a different timestamp. 16 corresponds to
+// the start of broadcast-safe black; real frames with any visible content
+// almost always exceed 20.
+export const BLACK_LUMA_THRESHOLD = 16
+
+// Below this, the 10th-to-90th percentile spread of luma values is so narrow
+// that the frame is effectively a single color band — solid grey, blank
+// gradients, slate / test cards, or the near-uniform "blocky" mush some
+// encoders leave around scene transitions. Real content almost always
+// exceeds 30.
+export const LOW_VARIANCE_SPREAD_THRESHOLD = 16
 
 const VIDEO_EXTENSIONS = new Set(['mkv', 'mp4', 'avi', 'mov', 'wmv', 'flv', 'webm', 'm4v', 'ts'])
 const IMAGE_EXTENSIONS = new Set(['jpg', 'jpeg', 'png', 'webp', 'tiff', 'bmp', 'gif'])
@@ -28,15 +45,44 @@ export function isAudio (extension: string): boolean {
   return AUDIO_EXTENSIONS.has(normalize(extension))
 }
 
+function secondsToTimestamp (totalSeconds: number): string {
+  const safe = Math.floor(Math.max(0, totalSeconds))
+  const hours = Math.floor(safe / 3600)
+  const minutes = Math.floor((safe % 3600) / 60)
+  const seconds = safe % 60
+  return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`
+}
+
 export function calculateTimestamp (durationSeconds?: number): string {
   if (!durationSeconds || durationSeconds <= 0) {
     return '00:00:01'
   }
-  const targetSeconds = Math.min(durationSeconds * 0.1, 300)
-  const hours = Math.floor(targetSeconds / 3600)
-  const minutes = Math.floor((targetSeconds % 3600) / 60)
-  const seconds = Math.floor(targetSeconds % 60)
-  return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`
+  return secondsToTimestamp(Math.min(durationSeconds * 0.1, 300))
+}
+
+// Ordered timestamps to probe when the first pick yields an all-black frame
+// (common with intro fades, scene transitions, or videos that open on a dark
+// shot). Position 0 matches calculateTimestamp() so the happy path is
+// unchanged; subsequent positions fan out across the clip, biasing toward
+// mid-points which tend to avoid intros and credits.
+export function buildTimestampCandidates (durationSeconds?: number): string[] {
+  if (!durationSeconds || durationSeconds <= 0) {
+    return ['00:00:01']
+  }
+  const percentages = [0.1, 0.25, 0.5, 0.4, 0.75, 0.05, 0.9]
+  const seen = new Set<string>()
+  const result: string[] = []
+  for (const pct of percentages) {
+    // Cap matches calculateTimestamp's 5-minute bound: pushing past that on
+    // long files doesn't help thumbnail quality and risks seeking into
+    // chapters the viewer won't recognize.
+    const ts = secondsToTimestamp(Math.min(durationSeconds * pct, 300))
+    if (!seen.has(ts)) {
+      seen.add(ts)
+      result.push(ts)
+    }
+  }
+  return result
 }
 
 // Internal convention: clockwise degrees needed to make the picture render upright.
@@ -122,6 +168,11 @@ export function buildRotationFilter (rotation: number): string | null {
 
 export interface VideoArgsOptions {
   rotation?: number
+  // When true, prepend signalstats+metadata=print to the -vf chain so the
+  // resulting ffmpeg invocation writes per-frame luma stats to stdout
+  // alongside writing the thumbnail to disk. Adds <5ms of analysis cost on a
+  // single frame and avoids a second ffmpeg call to probe the output.
+  analyze?: boolean
 }
 
 export function buildVideoArgs (
@@ -131,9 +182,14 @@ export function buildVideoArgs (
   options: VideoArgsOptions = {},
 ): string[] {
   const rotationFilter = buildRotationFilter(options.rotation ?? 0)
-  const vf = rotationFilter
+  // signalstats runs on the source frame (before scaling) so the stats reflect
+  // the actual content. metadata=mode=print:file=- dumps the resulting tags to
+  // stdout; the frame itself passes through unchanged into rotation+scale.
+  const analyzePrefix = options.analyze ? 'signalstats,metadata=mode=print:file=-,' : ''
+  const transform = rotationFilter
     ? `${rotationFilter},scale=${THUMBNAIL_WIDTH}:-1`
     : `scale=${THUMBNAIL_WIDTH}:-1`
+  const vf = `${analyzePrefix}${transform}`
   const args: string[] = ['-ss', timestamp]
   // -noautorotate disables ffmpeg's implicit rotation so our explicit transpose
   // chain is the single source of truth — otherwise a portrait phone clip can
@@ -185,14 +241,82 @@ export async function detectVideoRotation (client: PluginClient, input: string):
   }
 }
 
-export async function runFfmpeg (client: PluginClient, args: string[]): Promise<boolean> {
+export interface FfmpegResult {
+  ok: boolean
+  stdout: string
+}
+
+export async function runFfmpeg (client: PluginClient, args: string[]): Promise<FfmpegResult> {
   try {
     const result = await client.run('ffmpeg', args, {
       label: 'ffmpeg',
       timeout: FFMPEG_TIMEOUT,
     })
-    return result.exitCode === 0
+    return {
+      ok: result.exitCode === 0,
+      stdout: result.stdout,
+    }
   } catch {
+    return {
+      ok: false,
+      stdout: '',
+    }
+  }
+}
+
+// Parsed luma stats from signalstats+metadata=print output. YAVG is the
+// average luma value; YLOW/YHIGH are the 10th/90th percentile pixel values
+// (their spread serves as a robust tonal-range proxy).
+export interface FrameStats {
+  yavg: number
+  ylow: number
+  yhigh: number
+}
+
+function parseSignalStat (stdout: string, key: string): number | null {
+  const match = stdout.match(new RegExp(`lavfi\\.signalstats\\.${key}=([0-9.eE+-]+)`))
+  if (!match) {
+    return null
+  }
+  const value = parseFloat(match[1])
+  return Number.isFinite(value) ? value : null
+}
+
+export function parseFrameStats (stdout: string): FrameStats | null {
+  const yavg = parseSignalStat(stdout, 'YAVG')
+  const ylow = parseSignalStat(stdout, 'YLOW')
+  const yhigh = parseSignalStat(stdout, 'YHIGH')
+  if (yavg === null || ylow === null || yhigh === null) {
+    return null
+  }
+  return {
+    yavg,
+    ylow,
+    yhigh,
+  }
+}
+
+// A frame is "degenerate" if it's either too dark to convey content or has
+// so little tonal variation that it's effectively a single color. Both
+// conditions are independent — a dark scene with a single bright spot still
+// passes (yavg low but spread wide), and a bright solid-grey slate still
+// fails (yavg high but spread narrow).
+export function isFrameDegenerate (stats: FrameStats): boolean {
+  if (!Number.isFinite(stats.yavg) || !Number.isFinite(stats.ylow) || !Number.isFinite(stats.yhigh)) {
     return false
   }
+  if (stats.yavg < BLACK_LUMA_THRESHOLD) {
+    return true
+  }
+  if (stats.yhigh - stats.ylow < LOW_VARIANCE_SPREAD_THRESHOLD) {
+    return true
+  }
+  return false
+}
+
+// Higher = better. Used to pick the "least bad" thumbnail when every
+// candidate is degenerate — favors frames with wider tonal range over
+// uniformly dark or uniformly flat ones.
+export function frameQuality (stats: FrameStats): number {
+  return stats.yhigh - stats.ylow
 }
