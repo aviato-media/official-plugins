@@ -10,7 +10,7 @@
     "test": "bun test"
   },
   "dependencies": {
-    "@aviato-media/plugin-sdk": "^1.0.0",
+    "@aviato-media/plugin-sdk": "catalog:",
     "fast-xml-parser": "^5.2.0"
   },
   "devDependencies": {

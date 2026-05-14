@@ -9,9 +9,14 @@
     "type": "git",
     "url": "https://github.com/aviato-media/official-plugins"
   },
-  "workspaces": [
-    "plugins/*"
-  ],
+  "workspaces": {
+    "packages": [
+      "plugins/*"
+    ],
+    "catalog": {
+      "@aviato-media/plugin-sdk": "^1.1.0"
+    }
+  },
   "scripts": {
     "build": "bun run scripts/build-plugin.ts",
     "pack": "bun run scripts/pack-plugin.ts",
@@ -29,5 +34,8 @@
     "eslint": "^10.3.0",
     "husky": "^9.1.7",
     "typescript": "^6.0.3"
+  },
+  "dependencies": {
+    "@aviato-media/plugin-sdk": "catalog:"
   }
 }

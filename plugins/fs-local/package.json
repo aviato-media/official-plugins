@@ -10,7 +10,7 @@
     "test": "bun test"
   },
   "dependencies": {
-    "@aviato-media/plugin-sdk": "^1.0.0",
+    "@aviato-media/plugin-sdk": "catalog:",
     "mime-types": "^3.0.0"
   },
   "devDependencies": {
